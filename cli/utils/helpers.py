@@ -21,7 +21,6 @@ def is_in_scope(project, host):
     simple_hosts = []
     for x in hosts['exclude']:
         simple_hosts.append(x["host"])
-    print(simple_hosts)
     if host in simple_hosts:
         return False
     not_found = True

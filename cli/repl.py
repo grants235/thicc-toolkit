@@ -74,8 +74,8 @@ class Repl(object):
     def get_prompt_message(self) -> list:
 
         state = helpers.get_state(self.project)
-        if state["state_info"]["selected_host"] is not None:
-            state_str = state["state_info"]["selected_host"]
+        if state["state_info"]["active_host"] is not None:
+            state_str = state["state_info"]["active_host"]
         else:
             state_str = ""
 

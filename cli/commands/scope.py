@@ -1,6 +1,7 @@
 import click
 from ..utils import helpers
 from ..utils import defaults
+from ..commands import hosts
 
 def list(project, args):
     scope = helpers.get_scope(project)
@@ -40,8 +41,10 @@ def add(project, host, verb):
         scope[verb].append(host)
         helpers.write_scope(project, scope)
         click.secho(f"Added {host} to {verb}d scope", dim=True)
+        hosts.update_scope(project, host, verb)
+        click.secho(f"Updated the hosts list based on new scope", dim=True)
     else:
-        click.secho(f"ERROR: {host} already excluded in scope", dim=True)
+        click.secho(f"ERROR: {host} already in {verb}d scope", fg='yellow')
 
 def remove(project, host):
     scope = helpers.get_scope(project)
@@ -55,7 +58,7 @@ def remove(project, host):
         helpers.write_scope(project, scope)
         click.secho(f"Removed {host} from excluded scope", dim=True)
     else:
-        click.secho(f"ERROR: {host} is not is scope", dim=True)
+        click.secho(f"ERROR: {host} is not is scope", fg='yellow')
 
 def clear(project, args):
     helpers.write_scope(project, defaults.DEFAULT_SCOPE)

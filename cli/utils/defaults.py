@@ -3,7 +3,7 @@ INITIAL_STATE = {
     "project": None,
     "version": None,
     "state_info": {
-        "selected_host": None,
+        "active_host": None,
         "automated_enumeration": False
     }
 }

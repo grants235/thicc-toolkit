@@ -19,7 +19,7 @@ def multi_ping(hosts: list, timeout=1):
             results["success"].append(addr)
         return results
     except:
-        click.secho(f"ERROR: Cannot attempt to ping {hosts}")
+        click.secho(f"ERROR: Cannot attempt to ping {hosts}. Make sure you're running as sudo!", fg='yellow')
         return {"success": [], "fail": []}
 
 def can_resolve_domain(domain) -> bool:

@@ -21,7 +21,6 @@ COMMANDS = {
                         'meta': 'Include an IP, Subnet, Domain, or Subdomain to the project scope',
                         'exec': scope.add_excluded
                     }
-                    
                 }
             },
             'remove': {
@@ -49,6 +48,10 @@ COMMANDS = {
             'clear': {
                 'meta': 'Clear the hosts',
                 'exec': hosts.clear
+            },
+            'set-active-host': {
+                'meta': 'Set the current active host',
+                'exec': hosts.set_active
             }
         }
     },

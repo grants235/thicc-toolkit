@@ -1,5 +1,5 @@
 # THICC Toolkit
-> **T**the **H**ackers **I**nformation **C**ollection and **C**allaboration Toolkit
+> The Hackers Information Collection and Callaboration Toolkit
 
 ## Running the tool
 
