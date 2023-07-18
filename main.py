@@ -8,8 +8,8 @@ def main():
 
     args = parser.parse_args()
 
-    repl = Repl()
-    repl.run(project_arg=args.project)
+    repl = Repl(project_arg=args.project, threads=10)
+    repl.run()
     
 
 if __name__ == "__main__":

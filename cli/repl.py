@@ -14,6 +14,7 @@ from .my_commands import COMMANDS
 from .completer import CommandCompleter
 from .utils import helpers
 from .utils import defaults
+from . import state_manager
 
 
 class Repl(object):
@@ -21,16 +22,13 @@ class Repl(object):
         The exploration REPL for objection
     """
 
-    def __init__(self, host=None) -> None:
-        self.cli = None
+    def __init__(self, project_arg, threads=10) -> None:
+        self.version = "0.0.1"
 
         self.completer = FuzzyCompleter(CommandCompleter())
         self.commands_repository = COMMANDS
-        self.session = None
-        self.host = host
-        self.project = None
-        self.version = "0.0.1"
-        self.state = None
+        self.project = self.project_init(project_arg)
+        self.state = state_manager.StateManager(self.project, threads)
 
     def get_prompt_session(self) -> PromptSession:
         """
@@ -73,7 +71,7 @@ class Repl(object):
 
     def get_prompt_message(self) -> list:
 
-        state = helpers.get_state(self.project)
+        state = self.state.get_state()
         if state["state_info"]["active_host"] is not None:
             state_str = state["state_info"]["active_host"]
         else:
@@ -138,7 +136,7 @@ class Repl(object):
         arguments = tokens[token_matches:]
 
         # run the method for the command itself!
-        exec_method(self.project, arguments)
+        exec_method(self.state, arguments)
 
         # app_state.add_command_to_history(command=document)
 
@@ -281,23 +279,22 @@ class Repl(object):
             sys.exit()
 
 
-    def run(self, project_arg) -> None:
+    def run(self) -> None:
         helpers.clear()
 
         banner = ("""
- ______________         ____                  _____           _ _    _ _   
-|         |    |       (____)                |_   _|         | | |  (_) |  
-|__     __|    |______  ____  ______ ______    | | ___   ___ | | | ___| |_ 
-   |    | |           \|    |/     |/     |    | |/ _ \ / _ \| | |/ / | __|
-   |    | |     __     |    |    __|    __|    | | (_) | (_) | | | <| | |_|
-   |    | |    |  |    |    |   (__|   (__     \_/\___/ \___/|_|_|\_\_|\__|
-   |    | |    |  |    |    |      |      |       The hacker's information 
-   \____/ |____|  |____|____|\______\_____|    collection and collaboration
+ _______________         ____                  _____           _ _    _ _   
+|          |    |       (____)                |_   _|         | | |  (_) |  
+|___    ___|    |______  ____  ______ ______    | | ___   ___ | | | ___| |_ 
+   |    |  |           \|    |/     |/     |    | |/ _ \ / _ \| | |/ / | __|
+   |    |  |     __     |    |    __|    __|    | | (_) | (_) | | | <| | |_|
+   |    |  |    |  |    |    |   (__|   (__     \_/\___/ \___/|_|_|\_\_|\__|
+   |    |  |    |  |    |    |      |      |       The hacker's information 
+   \____/  |____|  |____|____|\______\_____|    collection and collaboration
             created by @grants235                         toolkit                            
 """)
 
         click.secho(banner, bold=True)
-        self.project = self.project_init(project_arg)
         self.session = self.get_prompt_session()
         click.secho('[tab] for command suggestions', fg='white', dim=True)
 

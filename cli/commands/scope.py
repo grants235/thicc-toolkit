@@ -1,10 +1,9 @@
 import click
-from ..utils import helpers
 from ..utils import defaults
 from ..commands import hosts
 
-def list(project, args):
-    scope = helpers.get_scope(project)
+def list(state, args):
+    scope = state.get_scope()
 
     if len(scope['include']) != 0:
 
@@ -28,38 +27,38 @@ def list(project, args):
         click.secho("No excluded hosts!", dim=True)
     
 
-def add_included(project, host):
-    add(project, host[0], 'include')
+def add_included(state, host):
+    add(state, host[0], 'include')
     
 
-def add_excluded(project, host):
-    add(project, host[0], 'exclude')
+def add_excluded(state, host):
+    add(state, host[0], 'exclude')
 
-def add(project, host, verb):
-    scope = helpers.get_scope(project)
+def add(state, host, verb):
+    scope = state.get_scope()
     if host not in scope[verb]:
         scope[verb].append(host)
-        helpers.write_scope(project, scope)
+        state.write_scope(scope)
         click.secho(f"Added {host} to {verb}d scope", dim=True)
-        hosts.update_scope(project, host, verb)
+        hosts.update_scope(state, host, verb)
         click.secho(f"Updated the hosts list based on new scope", dim=True)
     else:
         click.secho(f"ERROR: {host} already in {verb}d scope", fg='yellow')
 
-def remove(project, host):
-    scope = helpers.get_scope(project)
+def remove(state, host):
+    scope = state.get_scope()
     host = host[0]
     if host in scope['include']:
         scope['include'].remove(host)
-        helpers.write_scope(project, scope)
+        state.write_scope(scope)
         click.secho(f"Removed {host} from included scope", dim=True)
     elif host in scope['exclude']:
         scope['exclude'].remove(host)
-        helpers.write_scope(project, scope)
+        state.write_scope(scope)
         click.secho(f"Removed {host} from excluded scope", dim=True)
     else:
         click.secho(f"ERROR: {host} is not is scope", fg='yellow')
 
-def clear(project, args):
-    helpers.write_scope(project, defaults.DEFAULT_SCOPE)
+def clear(state, args):
+    state.write_scope(defaults.DEFAULT_SCOPE)
     click.secho("Cleared project scope", dim=True)
